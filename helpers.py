@@ -1,6 +1,6 @@
 from cs50 import SQL
 from datetime import datetime, timezone
-from backports.zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
 from flask import redirect, session
