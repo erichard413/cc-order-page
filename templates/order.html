@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ORDER
+{% endblock %}
+
+{% block main %}
+
+<div class="order main-body">
+
+    <div class="grid-wrap">
+        <div class="grid">
+
+        {% for p in products|sort(attribute='product_type') %}
+
+        <div class="item">
+            <h3>
+                {{p.product_name}}
+            </h3>
+            <span class="sub-header">Order Qauntity: {{p.bundle_qty}}</span>
+
+            <img src="{{p.img_src}}" alt="prepaid card photo">
+            <ul>
+            <li>{{p.description}}</li>
+            <li>Price per card: {{ "$%.2f"|format(p.unit_price) }}</li>
+            <li>
+                <input type="number" id="{{p.product_id}}-input" name="quantity" placeholder="0" min="0" max="99">
+                <span class="bundle-text">bundles of {{p.bundle_qty}} cards: </span><span id="{{p.product_id}}-curr-price">$0.00</span>
+            </li>
+            </ul>
+            <button id="{{p.product_id}}-btn">Add to Cart</button>
+        </div>
+       {% endfor %}
+  </div>
+</div>
+
+
+</div>
+<script>
+
+    function formatToUSD(number) {
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+        return formatter.format(number);
+    }
+
+    async function sendPostRequest(url, data) {
+    try {
+    const response = await fetch(url, {
+        method: 'POST', // Specify the HTTP method as POST
+        headers: {
+            'Content-Type': 'application/json' // Indicate that the body contains JSON data
+        },
+        body: JSON.stringify(data) // Convert the JavaScript object to a JSON string for the body
+    }).then(() => {
+        window.location = "/order"; // triggers page load → flash message appears
+    });
+
+    ;
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+
+    } catch (error) {
+        console.error('Error during POST request:', error);
+        throw error; // Re-throw the error for further handling
+    }
+    }
+
+    // format products to be object with keys of product ID.
+    let products_obj = Object;
+    ({{products | tojson}}).forEach(p => {
+        products_obj[p.product_id] = p
+    })
+
+    // current price spans
+    let accessCurrPrice = document.getElementById("211-curr-price");
+    let classicCurrPrice = document.getElementById("123-curr-price");
+    let formalCurrPrice = document.getElementById("125-curr-price");
+    let redCurrPrice = document.getElementById("124-curr-price");
+    let incentiveCurrPrice = document.getElementById("315-curr-price");
+    // GENERAL INPUTS
+    let inputs = document.querySelectorAll("input");
+    inputs.forEach((i)=>{
+        i.addEventListener("keydown", (e) => {
+            // allow back space
+            if (e.keyCode == 8) {
+                return;
+            }
+            // prevent 0 number
+            if (e.key == "0") {
+                e.preventDefault();
+            }
+            // prevent non integer
+            if (Number.isInteger(parseInt(e.key)) == false) {
+                e.preventDefault();
+            }
+            if (i.value.length >= 2) {
+                e.preventDefault();
+            }
+        })
+        // GIFT CARD
+        i.addEventListener("input", e=>{
+            if (i.id == "123-input") {
+                classicCurrPrice.innerText = formatToUSD((parseInt(i.value) * products_obj[123].unit_price)* products_obj[123].bundle_qty);
+            }
+        })
+        // ACCESS CARD
+        i.addEventListener("input", e=>{
+            if (i.id == "211-input") {
+                accessCurrPrice.innerText = formatToUSD((parseInt(i.value) * products_obj[211].unit_price)* products_obj[211].bundle_qty);
+            }
+        })
+        // RED ELEGANT CARD
+        i.addEventListener("input", e=>{
+            if (i.id == "124-input") {
+                redCurrPrice.innerText = formatToUSD((parseInt(i.value) * products_obj[124].unit_price)* products_obj[124].bundle_qty);
+            }
+        })
+        // FORMAL CARD
+        i.addEventListener("input", e=>{
+            if (i.id == "125-input") {
+                formalCurrPrice.innerText = formatToUSD((parseInt(i.value) * products_obj[125].unit_price)* products_obj[125].bundle_qty);
+            }
+        })
+        // INCENTIVE CARD
+        i.addEventListener("input", e=>{
+            if (i.id == "315-input") {
+                incentiveCurrPrice.innerText = formatToUSD((parseInt(i.value) * products_obj[315].unit_price)* products_obj[315].bundle_qty);
+            }
+        })
+    })
+
+    // BUTTONS
+    let btns = document.querySelectorAll('button');
+    btns.forEach(b => {
+        b.addEventListener("click", e => {
+            let id = b.id.split("-")[0]
+            let qty = (document.getElementById(`${id}-input`).value)
+            let data = {id, qty}
+            sendPostRequest('/order', data);
+        })
+    })
+
+
+
+
+</script>
+
+{% endblock %}

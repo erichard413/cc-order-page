@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Create Bank
+{% endblock %}
+
+
+{% block main %}
+<div class="newbank main-body">
+    <h1>Create Bank</h1>
+
+    <form action="/banks/create" method="post">
+        <div class="form-container">
+
+                <div class="mb-3">
+                    <label for="bank_name">Bank Name</label>
+                    <input class="form-control" id="bank_name" name="bank_name" type="text">
+                </div>
+                <div class="mb-3">
+                    <label for="website">Website:</label>
+                    <input class="form-control" id="website" name="website" type="text">
+                </div>
+                <div class="mb-3">
+                    <label for="address">Address:</label>
+                    <input class="form-control" id="address" name="address" type="text">
+                </div>
+                <div class="mb-3">
+                    <label for="city">City:</label>
+                    <input class="form-control" id="city" name="city" type="text">
+                </div>
+                <div class="mb-3">
+                    <label for="state">State:</label>
+                    <select autocomplete="off" autofocus class="form-control" id="state" name="state">
+                        {% for state in states %}
+                            <option name="{{state}}">
+                                {{ state }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="zip">Zip:</label>
+                    <input class="form-control" id="zip" name="zip" type="text">
+                </div>
+            </div>
+        <!-- BUTTONS -->
+        <div id="buttons-div">
+            <a class="a-btn" href="/banks">Cancel</a>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+
+</div>
+<script>
+
+    let websiteInput = document.getElementById('website')
+    websiteInput.addEventListener("keydown", (e)=>{
+        if (e.keyCode === 32) {
+                e.preventDefault(); // Prevent the space character from being entered
+            }
+    })
+
+
+</script>
+
+{% endblock %}

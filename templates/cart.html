@@ -1,0 +1,345 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    CART
+{% endblock %}
+
+{% block main %}
+
+<div class="cart main-body">
+    <div class="cart-container">
+        {% if products %}
+        <h1>Cart Details:</h1>
+        <div class="cart-left">
+        <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Bundle</th>
+                    <th>Quantity</th>
+                    <th>Total Cards</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                </tr>
+
+                {% for p in products %}
+                <tr>
+                    <td class="left">
+                        {{p.product_name}}
+                    </td>
+                    <td >
+                        {{p.bundle_qty}}
+                    </td>
+                    <td >
+                        {{p.qty}}
+                    </td>
+                    <td >
+                        {{p.bundle_qty * p.qty}}
+                    </td>
+                    <td >
+                        {{ "$%.2f"|format(p.unit_price) }}
+                    </td>
+                    <td class="right">
+                        {{ "$%.2f"|format(p.unit_price * (p.qty * p.bundle_qty)) }}
+                    </td>
+                    <!-- <td class="right">
+                        <i class="fa-solid fa-pen-to-square edit" id="edit-{{p.product_id}}"></i>
+                    </td> -->
+                    <td class="right">
+                        <i class="fa-solid fa-trash delete" id="delete-{{p.product_id}}"></i>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td id="total-td" class="right" colspan="6">Items: {{"$%.2f"|format(total)}}</td>
+                </tr>
+                <tr>
+                    <td id="total-td" class="right" colspan="6">Shipping: $15.00</td>
+                </tr>
+                <tr>
+                    <td id="total-td" class="right" colspan="6">Total: {{"$%.2f"|format(total+15)}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="cart-right">
+            <h2>Ship to:</h2>
+            <p>
+              <span id="ship-name">{{user_info.first_name}} {{user_info.last_name}}</span><br>
+              <span id="ship-bank">{{user_info.bank_name}}</span><br>
+              <span id="ship-address">{{user_info.address}}</span><br>
+              <span id="ship-city">{{user_info.city}}</span> <span id="ship-state">{{user_info.state}}</span> <span id="ship-zip">{{user_info.zip}}</span>
+            </p>
+            <div class="form-div hidden">
+                <form id="ship-form" >
+                            <div class="mb-3">
+                                <label for="first_name">
+                                    First Name:
+                                </label>
+                                <input autocomplete="off" autofocus class="form-control" name="first_name" value="{{user_info.first_name}}" type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label for="last_name">
+                                    Last Name:
+                                </label>
+                                <input autocomplete="off" autofocus class="form-control" name="last_name" value="{{user_info.last_name}}" type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label for="address">
+                                    Address:
+                                </label>
+                                <input autocomplete="off" autofocus class="form-control" name="address" value="{{user_info.address}}" type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label for="city">
+                                    City:
+                                </label>
+                                <input autocomplete="off" autofocus class="form-control" name="city" value="{{user_info.city}}" type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label for="Address">
+                                    State:
+                                </label>
+                                <select autocomplete="off" autofocus class="form-control" name="state" value="{{user_info.state}}" type="select">
+                                    {% for state in states %}
+                                    <option>{{state}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="Address">
+                                    Zip:
+                                </label>
+                                <input autocomplete="off" autofocus class="form-control" name="zip" value="{{user_info.zip}}" type="text">
+                            </div>
+                        </form>
+            </div>
+            <button id="cancel-edit-btn" class="hidden">Cancel</button>
+            <button id="ship-edit-btn">Edit</button>
+            <div class="notes-div">
+                <h2>Notes:</h2>
+                <p id="ship-notes"><i>Need Gift Card batch loaded? Expedited shipping? Need to talk to someone about your order? Leave a note here.</i></p>
+                <div class="note-edit-div hidden">
+                <form id="notes-form">
+                    <div class="mb-3">
+                                <label for="note">
+                                    Leave a note:
+                                </label>
+                                <textarea id="note-text-area" autocomplete="off" autofocus class="form-control" name="note" type="textarea" value=""></textarea>
+                    </div>
+                </form>
+                </div>
+                <button class="notes-cancel hidden">
+                    Cancel
+                </button>
+                <button class="notes-btn">
+                    <i class="fa-solid fa-pen-to-square note-edit"></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+<button id="place-order">Place Order</button>
+</div>
+{% else %}
+<div class="empty-cart-div">
+    <h1>Cart is empty!</h1>
+    <p>Add some items to your cart to get started.</p>
+    <a href="/order"><button>Order Now</button></a>
+</div>
+
+{% endif %}
+
+</div>
+<script>
+
+
+
+let notesText = document.getElementById("note-text-area")
+let notesCancel = document.querySelector('.notes-cancel')
+let notesDiv = document.querySelector('.note-edit-div')
+let notesForm = document.getElementById('notes-form')
+let notesBtn = document.querySelector('.notes-btn')
+let shipNotes= document.getElementById('ship-notes')
+let shipName = document.getElementById('ship-name')
+let shipBank = document.getElementById('ship-bank')
+let shipAddress = document.getElementById('ship-address')
+let shipCity = document.getElementById('ship-city')
+let shipState = document.getElementById('ship-state')
+let shipZip = document.getElementById('ship-zip')
+let formDiv = document.querySelector('.form-div')
+let cancelBtn = document.getElementById('cancel-edit-btn')
+let shipForm = document.querySelector("#ship-form")
+let orderBtn = document.querySelector("#place-order")
+let isEditing = false;
+let isWritingNote = false;
+
+async function sendPostRequest(url, data) {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success && result.redirect_url) {
+      // Redirect to receipt page for order
+      window.location.href = result.redirect_url;
+    } else {
+      console.error("API call failed or missing redirect URL");
+      window.location.href = result.redirect_url
+    }
+
+  } catch (error) {
+    console.error('Error during POST request:', error);
+    window.location.href = "/cart";
+  }
+}
+
+async function sendDeleteRequest(url) {
+    try {
+    const response = await fetch(url, {
+        method: 'DELETE', // Specify the HTTP method as DELETE
+        headers: {
+            'Content-Type': 'application/json' // Indicate that the body contains JSON data
+        },
+    }).then(() => {
+        window.location = "/cart"; // triggers page load → flash message appears
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    } catch (error) {
+        console.error('Error during DELETE request:', error);
+        throw error; // Re-throw the error for further handling
+    }
+}
+
+
+let deleteBtns = document.querySelectorAll('.delete')
+
+deleteBtns.forEach(btn => {
+    btn.addEventListener("click", e=>{
+        let id = btn.id.split("-")[1]
+        sendDeleteRequest(`/cart/${id}`)
+    })
+})
+
+let shipEditBtn = document.getElementById('ship-edit-btn')
+
+shipEditBtn.addEventListener("click", (e)=>{
+    let name = shipName.innerText
+    let address = shipAddress.innerText
+    let bank = shipBank.innerText
+    let city = shipCity.innerText
+    let state = shipState.innerText
+    let zip = shipZip.innerText
+    isEditing = !isEditing
+    if (isEditing) {
+
+        cancelBtn.classList.remove("hidden")
+        shipEditBtn.innerText = "Submit"
+        formDiv.classList.remove("hidden")
+    } else {
+        let formData = new FormData(shipForm)
+        if (formData.get('first_name') != "" && formData.get('last_name') != "") shipName.innerText = `${formData.get("first_name")} ${formData.get("last_name")}`
+        if (formData.get('address') != "") shipAddress.innerText = formData.get("address")
+        if (formData.get('city') != "") shipCity.innerText = formData.get("city")
+        if (formData.get('state') != "") shipState.innerText = formData.get("state")
+        if (formData.get('zip') != "") shipZip.innerText = formData.get("zip")
+        cancelBtn.classList.add("hidden")
+        shipEditBtn.innerText = "Edit"
+        formDiv.classList.add("hidden")
+    }
+
+})
+cancelBtn.addEventListener("click", (e)=>{
+    isEditing = !isEditing
+    if (isEditing) {
+        cancelBtn.classList.remove("hidden")
+        shipEditBtn.innerText = "Submit"
+        formDiv.classList.remove("hidden")
+    } else {
+        cancelBtn.classList.add("hidden")
+        shipEditBtn.innerText = "Edit"
+        formDiv.classList.add("hidden")
+    }
+
+})
+notesBtn.addEventListener("click", e => {
+    isWritingNote = !isWritingNote
+    if (isWritingNote) {
+        notesBtn.innerText = "Submit"
+        notesCancel.classList.remove("hidden")
+        notesDiv.classList.remove("hidden")
+    } else {
+        let text = notesText.value
+        console.log(text)
+        notesBtn.innerHTML = '<i class="fa-solid fa-pen-to-square note-edit"></i>'
+        shipNotes.innerHTML = `${text}`
+        notesDiv.classList.add("hidden")
+        notesCancel.classList.add("hidden")
+    }
+})
+
+notesCancel.addEventListener("click", e=>{
+    isWritingNote = !isWritingNote
+    notesCancel.classList.add("hidden")
+    notesDiv.classList.add("hidden")
+    notesBtn.innerHTML = '<i class="fa-solid fa-pen-to-square note-edit"></i>'
+})
+
+// format products to be object with keys of product ID.
+let products_arr = [];
+({{products | tojson}}).forEach(p => {
+    products_arr.push([p.product_id, p.qty])
+})
+
+orderBtn.addEventListener("click", e=> {
+    // do api call to place order
+    //body = {
+    //  items: [[id, qty], ...]
+    //  first_name: first
+    //  last_name: last
+    //  address: address
+    //  city: city
+    //  state: state
+    //  zip: zip
+    //  note: note
+    //}
+    let note = shipNotes.innerText == "Need Gift Card batch loaded? Expedited shipping? Need to talk to someone about your order? Leave a note here." ? "" : shipNotes.innerText
+
+    let body = {
+        items: products_arr,
+        first_name: shipName.innerText.split(" ")[0],
+        last_name: shipName.innerText.split(" ")[1],
+        address: shipAddress.innerText,
+        city: shipCity.innerText,
+        state: shipState.innerText,
+        zip: shipZip.innerText,
+        note: note
+    }
+
+    sendPostRequest('/order/new', body);
+})
+// let editBtns = document.querySelectorAll('.edit')
+
+// editBtns.forEach(btn => {
+//     btn.addEventListener("click", e=>{
+//         let id = btn.id.split("-")[1]
+//         //DO UPDATE HERE***********************
+//     })
+// })
+
+
+</script>
+
+{% endblock %}

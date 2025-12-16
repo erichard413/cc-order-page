@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ORDERS
+{% endblock %}
+
+{% block main %}
+
+<div class="orders main-body">
+    <h1>Orders</h1>
+    <div class="search-div">
+        <form class="search-form">
+            <div class="mb-3">
+                <label for="order_id">
+                    Order ID:
+                </label>
+                <input class="form-control " type="text" name="order_id">
+            </div>
+            <div class="mb-3">
+                <label for="bank">
+                    Bank Name:
+                </label>
+                <input class="form-control " type="text" name="bank">
+            </div>
+            <div class="mb-3">
+                <label for="user">
+                    Ordered By:
+                </label>
+                <input class="form-control " type="text" name="user" placeholder="Username">
+            </div>
+            <div class="mb-3">
+                <label for="order_status">Order Status:</label>
+                <select class="form-control " autocomplete="off" id="status" name="status" type="select">
+                    <option value="" id="select-all">All</option>
+                    <option value="received">Received</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="user">
+                    Tracking Number:
+                </label>
+                <input class="form-control " type="text" name="tracking" placeholder="Tracking #">
+            </div>
+            <button><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    <div class="table-div">
+        {% if orders %}
+        <table>
+                <thead>
+                    <td>
+                        Order Id
+                    </td>
+                    <td>
+                        Order Date (EST)
+                    </td>
+                    <td>
+                        Bank Name
+                    </td>
+                    <td>
+                        Ordered By
+                    </td>
+                    <td>
+                        Order Status
+                    </td>
+                    <td>
+                        Tracking #
+                    </td>
+                    <td>
+                        Shipped Date
+                    </td>
+                    <td>
+                        Shipping Name
+                    </td>
+                    <td>
+                        Shipping Address
+                    </td>
+                    <td>
+                        Order Total
+                    </td>
+                    <td>
+                        Receipt
+                    </td>
+                    <td>
+                        Edit
+                    </td>
+                </thead>
+
+                {% for order in orders %}
+                <td data-label="Order ID">#CC{{order.order_id}}</td>
+                <td data-label="Order Date">{{order.order_date}}</td>
+                <td data-label="Bank">{{order.bank_name}}</td>
+                <td data-label="Ordered By">
+                {% if order.username==None %}
+                    <i>-deleted-</i>
+                {% else %}
+                    {{order.username}}
+                {% endif %}
+                </td>
+                <td data-label="Status">{{order.order_status | capitalize}}</td>
+                <td data-label="Tracking">
+                {% if order.tracking and order.tracking != "NULL" %}
+                    {{order.tracking}}
+                {% else %}
+                    N/A
+                {% endif %}
+                </td>
+                <td data-label="Shipped">
+                {% if order.shipped_date and order.shipped_date != "NULL" %}
+                    {{order.shipped_date}}
+                {% else %}
+                    N/A
+                {% endif %}
+                </td>
+                <td data-label="Ship To">
+                {{order.first_name}} {{order.last_name}}
+                </td>
+                <td data-label="Address">
+                {{order.address}} {{order.city}} {{order.state}} {{order.zip}}
+                </td>
+                <td data-label="Total" class="right-align">
+                {{"$%.2f"|format(order.order_total + 15)}}
+                </td>
+                <td data-label="Receipt">
+                <a href="/order/{{order.order_id}}/receipt">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </a>
+                </td>
+                <td data-label="Edit">
+                <a href="/orders/edit/{{order.order_id}}">
+                    <i class="fas fa-edit"></i>
+                </a>
+                </td>
+                <!-- <tr>
+                    <td>
+                        #CC{{order.order_id}}
+                    </td>
+                    <td>
+                        {{order.order_date}}
+
+                    </td>
+                    <td>
+                        {{order.bank_name}}
+
+                    </td>
+                    <td>
+                        {% if order.username==None %}
+                        <i>-deleted-</i>
+                        {% else %}
+                        {{order.username}}
+                        {% endif %}
+
+                    </td>
+                    <td>
+                        {{order.order_status | capitalize}}
+                    </td>
+                    <td>
+                        {% if order.tracking and order.tracking != "NULL" %}
+                            {{order.tracking }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                    </td>
+                    <td>
+                        {% if order.shipped_date and order.shipped_date != "NULL" %}
+                            {{order.shipped_date}}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{order.first_name}} {{order.last_name}}
+                    </td>
+                    <td>
+                        {{order.address}} {{order.city}} {{order.state}} {{order.zip}}
+                    </td>
+                    <td class="right-align">
+                        {{"$%.2f"|format(order.order_total + 15)}}
+                    </td>
+                    <td>
+                        <a href="/order/{{order.order_id}}/receipt">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/orders/edit/{{order.order_id}}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td> -->
+                </tr>
+                {% endfor %}
+                {% else %}
+                <h5>No orders found!</h5>
+                {% endif %}
+
+            </table>
+            {% if orders %}
+            <div class="pagination">
+                {% if page==1 %}
+                <i class="fa-solid fa-circle-arrow-left disabled"></i>
+                {% else %}
+                <a href="/history?page={{page -1}}">
+                    <i class="fa-solid fa-circle-arrow-left"></i>
+                </a>
+
+                {% endif %}
+                <span id="page">{{page}}</span>
+                {% if page==endpage %}
+                    <i class="fa-solid fa-circle-arrow-right disabled"></i>
+                {% else %}
+                <a href="/history?page={{page + 1}}">
+                    <i class="fa-solid fa-circle-arrow-right"></i>
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}

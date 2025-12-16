@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Order
+{% endblock %}
+
+
+{% block main %}
+<div class="editorder main-body">
+    <h1>Editing Order: #CC{{ order.order_id }}</h1>
+
+    <form action="/orders/edit/{{ order.order_id }}" method="post">
+        <div class="form-container">
+
+            <!-- LEFT SIDE -->
+            <div class="form-left">
+
+                <div class="mb-3">
+                    <label for="order_status">Order Status:</label>
+                    <select autocomplete="off" autofocus class="form-control" id="order-status" name="order_status">
+                        {% for status in statuses %}
+                            <option value="{{ status }}" {% if order.order_status == status %}selected{% endif %}>
+                                {{ status | capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3 ship-date-div {% if order.order_status != 'shipped' %}hidden{% endif %}">
+                    <label for="shipped_date">Shipped Date:</label>
+                    <input class="form-control" id="shipped_date" name="shipped_date"
+                           {% if order.shipped_date %}value="{{ order.shipped_date }}"{% endif %}
+                           type="date">
+                </div>
+
+                <div class="mb-3 tracking-div {% if order.order_status != 'shipped' %}hidden{% endif %}">
+                    <label for="tracking">Tracking #:</label>
+                    <input class="form-control" id="tracking" name="tracking"
+                           {% if order.tracking and order.tracking != 'null' %}
+                               value="{{ order.tracking }}"
+                           {% else %}
+                               placeholder="Input tracking # here"
+                           {% endif %}>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ordered_by">Placed by:</label>
+                    <input class="form-control" id="ordered_by" name="ordered_by"
+                           placeholder="{{ order.ordered_by_first | capitalize }} {{ order.ordered_by_last | capitalize }}"
+                           disabled>
+                </div>
+
+                {% if order.note %}
+                <div class="mb-3">
+                    <label for="customer_note">Customer Note:</label>
+                    <textarea id="customer-note" autocomplete="off" class="form-control" name="customer_note" disabled>{{order.note}}
+</textarea>
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label for="admin_note">Admin Note:</label>
+                    <textarea id="note-text-area" autocomplete="off" class="form-control" name="admin_note"
+                              placeholder="{{ order.admin_note }}"></textarea>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="form-right">
+
+                <div class="mb-3">
+                    <label for="first_name">First Name:</label>
+                    <input class="form-control" id="first_name" name="first_name"
+                           placeholder="{{ order.recipient_first | capitalize }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="last_name">Last Name:</label>
+                    <input class="form-control" id="last_name" name="last_name"
+                           placeholder="{{ order.recipient_last | capitalize }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="bank_name">Bank Name:</label>
+                    <input class="form-control" id="bank_name" name="bank_name"
+                           placeholder="{{ order.bank_name }}" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address">Address:</label>
+                    <input class="form-control" id="address" name="address" placeholder="{{ order.address }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="city">City:</label>
+                    <input class="form-control" id="city" name="city" placeholder="{{ order.city }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="state">State:</label>
+                    <input class="form-control" id="state" name="state" placeholder="{{ order.state }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="zip">Zip:</label>
+                    <input class="form-control" id="zip" name="zip" placeholder="{{ order.zip }}">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div id="buttons-div">
+            <a class="a-btn" href="/orders">Cancel</a>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+
+    </form>
+</div>
+<script>
+    let datePicker=document.getElementById("shipped_date")
+    let trackingDiv = document.querySelector(".tracking-div")
+    let shipDiv = document.querySelector(".ship-date-div")
+    let orderStatus = document.querySelector("#order-status")
+    orderStatus.addEventListener("input", e=> {
+        if (orderStatus.value == "shipped") {
+            shipDiv.classList.remove('hidden')
+            trackingDiv.classList.remove('hidden')
+        } else {
+            trackingDiv.classList.add('hidden')
+            ship_div.classList.add('hidden')
+        }
+    })
+
+    datePicker.addEventListener("input", e=>{
+        console.log(datePicker.value)
+    })
+
+</script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+<div class="register middle">
+    <div class="form-container">
+        <form action="/register" method="post">
+            <div class="mb-3">
+                <label for="username">
+                    Username:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="username" id="username" placeholder="Username" type="text" maxlength="30">
+            </div>
+            <div class="mb-3">
+                <label for="password">
+                    Password:
+                </label>
+                <input class="form-control" name="password" placeholder="Password" id="password" type="password" maxlength="30">
+            </div>
+            <div class="mb-3">
+                <label for="confirm">
+                    Confirm Password:
+                </label>
+                <input class="form-control" name="confirm" placeholder="Password" id="confirm" type="password" maxlength="30">
+            </div>
+            <div class="mb-3">
+                <label for="first_name">
+                    First Name:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="first_name" placeholder="First Name" type="text">
+            </div>
+            <div class="mb-3">
+                <label for="last_name">
+                    Last Name:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="last_name" placeholder="Last Name" type="text">
+            </div>
+            <div class="mb-3">
+                <label for="email">
+                    Email:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="email" id="email" placeholder="Email@me.com" type="email">
+            </div>
+            <div class="mb-3">
+                <label for="bank_id">
+                    Bank:
+                </label>
+                <select autocomplete="off" autofocus class="form-control" name="bank_id" placeholder="Select your bank" type="select">
+                    {% for bank in banks %}
+                        <option value="{{bank.bank_id}}">{{bank.bank_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+        </div>
+</div>
+
+    <script>
+    let userInput = document.getElementById('username')
+    userInput.addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+        if (userInput.value.length >= 30 && e.keyCode !=8) {
+            e.preventDefault(); // Prevent the user from being able to enter in more than 30 characters
+        }
+    });
+    userInput.addEventListener("paste", function(e) {
+        let clipboardData = (event.clipboardData || window.clipboardData).slice(0,30);
+        userInput.value = clipboardData;
+    })
+    let passwordInputList = document.querySelectorAll('input[type="password"]')
+    passwordInputList.forEach(input => {
+        input.addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+        if (input.value.length >= 30 && e.keyCode !=8 && e.keyCode !== "tab") {
+            e.preventDefault(); // Prevent the user from being able to enter in more than 30 characters
+        }
+    })
+    });
+    document.getElementById('email').addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+    });
+</script>
+{% endblock %}
+
+

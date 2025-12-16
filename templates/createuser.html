@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Info
+{% endblock %}
+
+{% block main %}
+<div class="users main-body">
+    <div class="info-div">
+    <h1>Create New User</h1>
+    <div class="form-container">
+    <form action="/users/new" method="post">
+            <div class="mb-3">
+                <label for="username">
+                    Username:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="username" id="username" type="text" maxlength="30">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    Password:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="password" id="password" maxlength="30" type="password">
+            </div>
+            <div class="mb-3">
+                <label for="confirm">
+                    Confirm Password:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="confirm" id="confirm" maxlength="30" type="password">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    First Name:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="first_name" type="text">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    Last Name:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="last_name"  type="text">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    Email:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="email" id="email" type="email">
+            </div>
+            <div class="mb-3">
+                <label for="bank_id">
+                    Bank:
+                </label>
+
+                 <select autocomplete="off" autofocus class="form-control" name="bank" type="select">
+                    {% for bank in banks %}
+                        <option value="{{bank.bank_id | int}}">{{bank.bank_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="is_admin">
+                    Admin:
+                </label>
+                 <select autocomplete="off" autofocus class="form-control" id="is_admin" name="is_cc_admin" type="select">
+                    <option value="False" >False</option>
+                    <option value="True" >True</option>
+
+                </select>
+            </div>
+                    <!-- BUTTONS -->
+            <div id="buttons-div">
+            <a class="a-btn" href="/banks">Cancel</a>
+            <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </form>
+
+    </div>
+
+    </div>
+
+
+</div>
+
+<script>
+    document.getElementById('username').addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+    });
+    document.getElementById('confirm').addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+    });
+    document.getElementById('email').addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+    });
+    let userInput = document.getElementById('username')
+    userInput.addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+        if (userInput.value.length >= 30 && e.keyCode !=8) {
+            e.preventDefault(); // Prevent the user from being able to enter in more than 30 characters
+        }
+    });
+    userInput.addEventListener("paste", function(e) {
+        let clipboardData = (event.clipboardData || window.clipboardData).slice(0,30);
+        userInput.value = clipboardData;
+    })
+    let passwordInputList = document.querySelectorAll('input[type="password"]')
+    passwordInputList.forEach(input => {
+        input.addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+        if (input.value.length >= 30 && e.keyCode !=8 && e.keyCode !== "tab") {
+            e.preventDefault(); // Prevent the user from being able to enter in more than 30 characters
+        }
+    })
+    });
+    document.getElementById('email').addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+    });
+</script>
+{% endblock %}

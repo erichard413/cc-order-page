@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Info
+{% endblock %}
+
+{% block main %}
+<div class="edituser main-body">
+    <div class="info-div">
+    <h1>Editing {{user.username}}</h1>
+    <div class="form-container">
+    <form action="/users/edit/{{user.user_id}}" method="post">
+            <div class="mb-3">
+                <label for="username">
+                    Username:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="username" id="username" disabled placeholder={{user.username}} type="text" maxlength="20">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    First Name:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="first_name" value={{user.first_name}} type="text">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    Last Name:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="last_name" value={{user.last_name}} type="text">
+            </div>
+            <div class="mb-3">
+                <label for="username">
+                    Email:
+                </label>
+                <input autocomplete="off" autofocus class="form-control" name="email" id="email" value={{user.email}} type="email">
+            </div>
+            <div class="mb-3">
+                <label for="bank_id">
+                    Bank:
+                </label>
+
+                 <select autocomplete="off" autofocus class="form-control" name="bank" type="select">
+                    {% for bank in banks %}
+                    {% if bank.bank_id == user.bank %}
+                        <option value="{{bank.bank_id}}" selected >{{bank.bank_name}}</option>
+                    {% else %}
+                        <option value="{{bank.bank_id}}">{{bank.bank_name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="is_admin">
+                    Admin:
+                </label>
+                 <select autocomplete="off" autofocus class="form-control" id="is_admin" name="is_cc_admin" type="select">
+                    <option value=False {% if user.is_cc_admin %} selected {% endif %} >False</option>
+                    <option value=True {% if user.is_cc_admin %} selected {% endif %} >True</option>
+
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+        <div class="btn-div">
+        <a href="/users/password/{{user.user_id}}">
+            <button>Change Password</button>
+        </a>
+        <a href="/orders?user={{user.username}}">
+            <button>{{user.username}}'s Order History</button>
+        </a>
+            <button id="delete-btn">Delete User</button>
+        </div>
+
+    </div>
+
+    </div>
+    <div class="confirm-modal hidden">
+    <div class="confirm-modal-body">
+        <h4>Are you sure you want to delete this user? This action cannot be undone.</h4>
+        <div class="modal-btns">
+            <button id="confirm-cancel-btn">Cancel</button>
+            <form action="/users/delete/{{user.user_id}}" method="POST">
+                <button id="confirm-delete-btn">Confirm</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+</div>
+
+<script>
+    let deleteBtn = document.getElementById("delete-btn")
+    let confirmModal = document.querySelector(".confirm-modal")
+    let modalBody = document.querySelector(".confirm-modal-body")
+    let cancelBtn = document.getElementById("confirm-cancel-btn")
+    let confirmDeleteBtn = document.getElementById("confirm-delete-btn")
+
+
+    document.getElementById('email').addEventListener('keydown', function(e) {
+        if (e.keyCode === 32) {
+            e.preventDefault(); // Prevent the space character from being entered
+        }
+    });
+    // Open modal
+    deleteBtn.addEventListener("click", ()=>{
+            confirmModal.classList.remove("hidden")
+
+            //reset animation
+            modalBody.classList.remove("isClosing");
+            modalBody.classList.remove("isOpen");
+
+            void modalBody.offsetWidth;
+
+            // Start zoom in
+            modalBody.classList.add("isOpen");
+    })
+
+    // close modal
+    cancelBtn.addEventListener("click", (e)=>{
+        // Stop zoom in if running
+        modalBody.classList.add("isOpen");
+
+        // start zoom out
+        modalBody.classList.add("isClosing");
+    });
+
+    // when zoomout finishes hide the modal
+    modalBody.addEventListener("animationend", (e)=>{
+        if (e.animationName === "zoomOut") {
+            modalBody.classList.remove("isClosing");
+            confirmModal.classList.add("hidden");
+        }
+    })
+</script>
+{% endblock %}

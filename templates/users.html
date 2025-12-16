@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    USERS
+{% endblock %}
+
+{% block main %}
+
+<div class="users main-body">
+    <h1>Users</h1>
+    <div class="search-div">
+        <form class="search-form">
+            <div class="mb-3">
+                <label for="username">
+                    Username
+                </label>
+                <input class="form-control " type="text" name="username">
+            </div>
+            <div class="mb-3">
+                <label for="first_name">
+                    First Name:
+                </label>
+                <input class="form-control " type="text" name="first_name">
+            </div>
+            <div class="mb-3">
+                <label for="last_name">
+                    Last Name:
+                </label>
+                <input class="form-control " type="text" name="last_name" >
+            </div>
+            <div class="mb-3">
+                <label for="email">
+                    Email:
+                </label>
+                <input class="form-control " type="email" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="bank_name">
+                    Bank Name:
+                </label>
+                <input class="form-control " type="text" name="bank_name">
+            </div>
+            <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            <a class="a-btn" id="create-user-btn" href="/users/new">Create New User</a>
+        </form>
+    </div>
+    <div class="table-div">
+        {% if users %}
+        <table>
+                <thead>
+                    <td>
+                        Username
+                    </td>
+                    <td>
+                        First Name
+                    </td>
+                    <td>
+                        Last Name
+                    </td>
+                    <td>
+                        Email
+                    </td>
+                    <td>
+                        Bank
+                    </td>
+                    <td>
+                        Join Date
+                    </td>
+                    <td>
+                        Edit
+                    </td>
+                </thead>
+
+                {% for user in users %}
+                <tr>
+                    <td data-label="Username">
+                        {{user.username}}
+                    </td>
+                    <td data-label="First Name">
+                        {{user.first_name | capitalize}}
+
+                    </td>
+                    <td data-label="Last Name">
+                        {{user.last_name | capitalize }}
+
+                    </td>
+                    <td data-label="Email">
+                        {{user.email }}
+
+                    </td>
+                    <td data-label="Bank Name">
+                        {{user.bank_name}}
+
+                    </td>
+                    <td data-label="Join Date">
+                        {{user.join_date}}
+                    </td>
+                    <td data-label="Edit">
+                        <a href="/users/edit/{{user.user_id}}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <h3>No users found!</h3>
+                {% endif %}
+
+            </table>
+            {% if users %}
+            <div class="pagination">
+                {% if page==1 %}
+                <i class="fa-solid fa-circle-arrow-left disabled"></i>
+                {% else %}
+                <a href="/history?page={{page -1}}">
+                    <i class="fa-solid fa-circle-arrow-left"></i>
+                </a>
+
+                {% endif %}
+                <span id="page">{{page}}</span>
+                {% if page==endpage %}
+                    <i class="fa-solid fa-circle-arrow-right disabled"></i>
+                {% else %}
+                <a href="/history?page={{page + 1}}">
+                    <i class="fa-solid fa-circle-arrow-right"></i>
+                </a>
+
+                {% endif %}
+            </div>
+            {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

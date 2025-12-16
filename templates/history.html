@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    HISTORY
+{% endblock %}
+
+
+{% block main %}
+
+<div class="history main-body">
+    <h1>Your Ordering History</h1>
+    <div class="table-div">
+        {% if orders %}
+        <table>
+                <thead>
+                    <td>
+                        Order Id
+                    </td>
+                    <td>
+                        Order Date (EST)
+                    </td>
+                    <td>
+                        Order Status
+                    </td>
+                    <td>
+                        Shipping Name
+                    </td>
+                    <td>
+                        Shipping Address
+                    </td>
+                    <td>
+                        Order Total
+                    </td>
+                    <td>
+                        Receipt
+                    </td>
+                </thead>
+
+                {% for order in orders %}
+                <tr>
+                    <td>
+                        #CC{{order.order_id}}
+                    </td>
+                    <td>
+                        {{order.order_date}}
+
+                    </td>
+                    <td>
+                        {{order.order_status | capitalize}}
+                    </td>
+                    <td>
+                        {{order.first_name}} {{order.last_name}}
+                    </td>
+                    <td>
+                        {{bank}}, {{order.address}} {{order.city}} {{order.state}} {{order.zip}}
+                    </td>
+                    <td class="right-align">
+                        {{"$%.2f"|format(order.order_total + 15)}}
+                    </td>
+                    <td>
+                        <a href="/order/{{order.order_id}}/receipt">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </table>
+
+            <div class="pagination">
+                {% if page==1 %}
+                <i class="fa-solid fa-circle-arrow-left disabled"></i>
+                {% else %}
+                <a href="/history?page={{page -1}}">
+                    <i class="fa-solid fa-circle-arrow-left"></i>
+                </a>
+                {% endif %}
+                <span id="page">{{page}}</span>
+                {% if page==endpage %}
+                    <i class="fa-solid fa-circle-arrow-right disabled"></i>
+                {% else %}
+                <a href="/history?page={{page + 1}}">
+                    <i class="fa-solid fa-circle-arrow-right"></i>
+                </a>
+                {% endif %}
+            </div>
+
+</div>
+{% else %}
+<h5>No orders found!</h5>
+<a class="a-btn" href="/order">Place an Order</a>
+{% endif %}
+{% endblock %}

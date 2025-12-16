@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <div class="login middle">
+    <div class="form-container">
+        <form action="/login" method="post">
+            <div class="mb-3">
+                <label for="username">Username:</label>
+                <input autocomplete="off" autofocus class="form-control " id="username" name="username" placeholder="Username" type="text">
+            </div>
+            <div class="mb-3">
+                <label for="password">Password:</label>
+                <input class="form-control " id="password" name="password" placeholder="Password" type="password">
+            </div>
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </form>
+        </div>
+    </div>
+
+    <script>
+        let userInput = document.querySelectorAll('input');
+
+        userInput.forEach(input => {
+            input.addEventListener("keydown", function(e) {
+            if (e.keyCode === 32) {
+                e.preventDefault(); // Prevent the space character from being entered
+            }
+            if (input.value.length >= 30 && e.keyCode != 8) {
+                e.preventDefault(); // Prevent the user from being able to enter in more than 30 characters
+            }
+            });
+            input.addEventListener("paste", function(e) {
+                let clipboardData = (event.clipboardData || window.clipboardData).getData('text').slice(0, 30);
+                console.log(clipboardData)
+                input.value = clipboardData.slice(0,30)
+            })
+        });
+
+    </script>
+{% endblock %}
+
+
+

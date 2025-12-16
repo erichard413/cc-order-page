@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    BANKS
+{% endblock %}
+
+{% block main %}
+
+<div class="banks main-body">
+    <h1>Banks</h1>
+
+    <div class="search-div">
+        <form class="search-form">
+            <div class="mb-3">
+                <label for="bank_name">
+                    Bank Name:
+                </label>
+                <input class="form-control " id="bank_name" type="text" name="bank_name">
+            </div>
+            <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            <a class="a-btn" href="/banks/create">Create New Bank</a>
+        </form>
+
+    </div>
+    <div class="table-div">
+        {% if banks %}
+        <table>
+                <thead>
+                    <td>
+                        Bank Name
+                    </td>
+                    <td>
+                        Website
+                    </td>
+                    <td>
+                        Address
+                    </td>
+                    <td>
+                        City
+                    </td>
+                    <td>
+                        State
+                    </td>
+                    <td>
+                        Zip
+                    </td>
+                    <td>
+                        Edit
+                    </td>
+                </thead>
+
+                {% for bank in banks %}
+                <tr>
+                    <td data-label="Bank Name">
+                        {{bank.bank_name}}
+                    </td>
+                    <td data-label="Website">
+                        {% if bank.website != None %}
+                            <a href="{{bank.website}}">{{bank.website}}</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+
+                    </td>
+                    <td data-label="Address">
+                        {{bank.address}}
+
+                    </td>
+                    <td data-label="City">
+                        {{bank.city }}
+
+                    </td>
+                    <td data-label="State">
+                        {{bank.state}}
+
+                    </td>
+                    <td data-label="Zip">
+                        {{bank.zip}}
+                    </td>
+                    <td data-label="Edit">
+                        <a href="/banks/edit/{{bank.bank_id}}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <h3>No banks found!</h3>
+                {% endif %}
+
+            </table>
+            {% if banks %}
+            <div class="pagination">
+                {% if page==1 %}
+                <i class="fa-solid fa-circle-arrow-left disabled"></i>
+                {% else %}
+                <a href="/banks?page={{page -1}}">
+                    <i class="fa-solid fa-circle-arrow-left"></i>
+                </a>
+
+                {% endif %}
+                <span id="page">{{page}}</span>
+                {% if page==endpage %}
+                    <i class="fa-solid fa-circle-arrow-right disabled"></i>
+                {% else %}
+                <a href="/banks?page={{page + 1}}">
+                    <i class="fa-solid fa-circle-arrow-right"></i>
+                </a>
+
+                {% endif %}
+            </div>
+            {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}
