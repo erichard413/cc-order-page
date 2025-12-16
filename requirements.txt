@@ -1,4 +1,4 @@
-backports.zoneinfo==0.2.1
+backports.zoneinfo==0.2.1;python_version<"3.9"
 blinker==1.8.2
 cachelib==0.13.0
 click==8.1.8

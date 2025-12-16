@@ -37,3 +37,6 @@ Thumbs.db # Windows
 
 # Ignore node modules
 node_modules/
+
+# Ignore db files
+*.db
