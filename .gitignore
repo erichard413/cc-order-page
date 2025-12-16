@@ -1,0 +1,36 @@
+requirements.txt
+
+# Ignore Flask session files
+flask_session/
+
+# Virtual environment
+venv/
+env/
+.venv/
+.env/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# Build artifacts
+instance/
+dist/
+build/
+
+# Logs and temporary files
+*.log
+*.tmp
+.webassets-cache
+
+# OS generated files
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp # Vim
