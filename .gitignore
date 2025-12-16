@@ -34,3 +34,6 @@ Thumbs.db # Windows
 .idea/
 .vscode/
 *.swp # Vim
+
+# Ignore node modules
+node_modules/
