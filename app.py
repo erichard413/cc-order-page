@@ -449,5 +449,9 @@ def delete_user(id):
     flash(res[1])
     return redirect("/users")
 
+# Run the app if this file is executed directly
+if __name__ == "__main__":
+    app.run()
+
 
 
