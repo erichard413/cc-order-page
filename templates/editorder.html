@@ -29,7 +29,7 @@
                 <div class="mb-3 ship-date-div {% if order.order_status != 'shipped' %}hidden{% endif %}">
                     <label for="shipped_date">Shipped Date:</label>
                     <input class="form-control" id="shipped_date" name="shipped_date"
-                           {% if order.shipped_date %}value="{{ order.shipped_date }}"{% endif %}
+                           {% if order.shipped_date %} value="{{order.shipped_date}}" {% endif %}
                            type="date">
                 </div>
 

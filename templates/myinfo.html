@@ -1,89 +1,103 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    Edit Info
-{% endblock %}
-
-{% block main %}
+{% extends "layout.html" %} {% block title %} Edit Info {% endblock %} {% block
+main %}
 <div class="main-body">
-    <div class="info-div">
+  <div class="info-div">
     <h1>Edit your Info</h1>
     <div class="form-container">
-    <form action="/myinfo" method="post">
-            <div class="mb-3">
-                <label for="username">
-                    Username:
-                </label>
-                <input autocomplete="off" autofocus class="form-control" name="username" id="username" disabled value={{user_info.username}} type="text" maxlength="20">
-            </div>
-            <div class="mb-3">
-                <label for="username">
-                    First Name:
-                </label>
-                <input autocomplete="off" autofocus class="form-control" name="first_name" value={{user_info.first_name}} type="text">
-            </div>
-            <div class="mb-3">
-                <label for="username">
-                    Last Name:
-                </label>
-                <input autocomplete="off" autofocus class="form-control" name="last_name" value={{user_info.last_name}} type="text">
-            </div>
-            <div class="mb-3">
-                <label for="username">
-                    Email:
-                </label>
-                <input autocomplete="off" autofocus class="form-control" name="email" id="email" value={{user_info.email}} type="email">
-            </div>
-            <div class="mb-3">
-                <label for="bank_id">
-                    Bank:
-                </label>
+      <form action="/myinfo" method="post">
+        <div class="mb-3">
+          <label for="username"> Username: </label>
+          <input
+            autocomplete="off"
+            autofocus
+            class="form-control"
+            name="username"
+            id="username"
+            disabled
+            value="{{user_info.username}}"
+            type="text"
+            maxlength="20"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username"> First Name: </label>
+          <input
+            autocomplete="off"
+            autofocus
+            class="form-control"
+            name="first_name"
+            value="{{user_info.first_name}}"
+            type="text"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username"> Last Name: </label>
+          <input
+            autocomplete="off"
+            autofocus
+            class="form-control"
+            name="last_name"
+            value="{{user_info.last_name}}"
+            type="text"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username"> Email: </label>
+          <input
+            autocomplete="off"
+            autofocus
+            class="form-control"
+            name="email"
+            id="email"
+            value="{{user_info.email}}"
+            type="email"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="bank_id"> Bank: </label>
 
-                 <select autocomplete="off" autofocus class="form-control" name="bank_id" type="select">
-                    {% for bank in banks %}
-                    {% if bank.bank_id == user_info.bank %}
-                        <option value="{{bank.bank_id}}" selected >{{bank.bank_name}}</option>
-                    {% else %}
-                        <option value="{{bank.bank_id}}">{{bank.bank_name}}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-            <button class="btn btn-primary" type="submit">Edit My Info</button>
-        </form>
-        <div class="btn-div">
+          <select
+            autocomplete="off"
+            autofocus
+            class="form-control"
+            name="bank_id"
+            type="select"
+          >
+            {% for bank in banks %} {% if bank.bank_id == user_info.bank %}
+            <option value="{{bank.bank_id}}" selected>
+              {{bank.bank_name}}
+            </option>
+            {% else %}
+            <option value="{{bank.bank_id}}">{{bank.bank_name}}</option>
+            {% endif %} {% endfor %}
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Edit My Info</button>
+      </form>
+      <div class="btn-div">
         <a href="/password">
-            <button>Change Password</button>
+          <button>Change Password</button>
         </a>
         {% if user_info.is_cc_admin == false %}
         <a href="/history">
-            <button>Order History</button>
+          <button>Order History</button>
         </a>
         {% endif %}
-        </div>
-
+      </div>
     </div>
-
-    </div>
-
-
+  </div>
 </div>
 
 <script>
-    document.getElementById('username').addEventListener('keydown', function(e) {
-        if (e.keyCode === 32) {
-            e.preventDefault(); // Prevent the space character from being entered
-        }
-    });
-    document.getElementById('confirm').addEventListener('keydown', function(e) {
-        if (e.keyCode === 32) {
-            e.preventDefault(); // Prevent the space character from being entered
-        }
-    });
-    document.getElementById('email').addEventListener('keydown', function(e) {
-        if (e.keyCode === 32) {
-            e.preventDefault(); // Prevent the space character from being entered
-        }
-    });
+  document.getElementById("username").addEventListener("keydown", function (e) {
+    if (e.keyCode === 32) {
+      e.preventDefault(); // Prevent the space character from being entered
+    }
+  });
+  document.getElementById("email").addEventListener("keydown", function (e) {
+    if (e.keyCode === 32) {
+      e.preventDefault(); // Prevent the space character from being entered
+    }
+  });
 </script>
 {% endblock %}

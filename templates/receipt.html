@@ -1,147 +1,134 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    Receipt
-{% endblock %}
-
-{% block main %}
+{% extends "layout.html" %} {% block title %} Receipt {% endblock %} {% block
+main %}
 
 <div class="receipt main-body">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.7/purify.min.js" integrity="sha512-78KH17QLT5e55GJqP76vutp1D2iAoy06WcYBXB6iBCsmO6wWzx0Qdg8EDpm8mKXv68BcvHOyeeP4wxAL0twJGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.7/purify.min.js"
+    integrity="sha512-78KH17QLT5e55GJqP76vutp1D2iAoy06WcYBXB6iBCsmO6wWzx0Qdg8EDpm8mKXv68BcvHOyeeP4wxAL0twJGQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <div id="receipt-head">
-        {% if is_admin == true %}
-        <h1>Order: #CC{{order.order_id}}</h1>
-        {% else %}
-        <h1>Thank you for your order, {{user_info.first_name}}.</h1>
-        {% endif %}
-        <button id="cmd">Print PDF</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <div id="receipt-head">
+    {% if is_admin == true %}
+    <h1>Order: #CC{{order.order_id}}</h1>
+    {% else %}
+    <h1>Thank you for your order, {{user_info.first_name}}.</h1>
+    {% endif %}
+    <button id="cmd">Print PDF</button>
+  </div>
+
+  <div class="receipt-container" id="receipt">
+    <img src="https://i.postimg.cc/jjvPRFR2/CC-Header.png" alt="cc-logo" />
+    <div class="receipt-header">
+      <div class="receipt-header-left">
+        <h2>CC Studio Card Ordering</h2>
+        <ul>
+          <li>Convenient Cards Inc.</li>
+          <li>One Monarch Place, Suite 240</li>
+          <li>Springfield, Massachusetts 01144</li>
+          <li>United States</li>
+        </ul>
+      </div>
+      <div class="receipt-header-right">
+        <h4>Customer Service:</h4>
+        ccstudio@convenientcards.com
+      </div>
     </div>
-
-    <div class="receipt-container" id="receipt"><img src="https://i.postimg.cc/jjvPRFR2/CC-Header.png" alt="cc-logo"/>
-        <div class="receipt-header">
-            <div class="receipt-header-left">
-
-                <h2>CC Studio Card Ordering</h2>
-                <ul>
-                    <li>
-                        Convenient Cards Inc.
-                    </li>
-                    <li>
-                        One Monarch Place, Suite 240
-                    </li>
-                    <li>
-                        Springfield, Massachusetts 01144
-                    </li>
-                    <li>
-                        United States
-                    </li>
-                </ul>
-            </div>
-            <div class="receipt-header-right">
-                <h4>Customer Service:</h4>
-                ccstudio@convenientcards.com
-            </div>
-        </div>
-        <hr><h4>{{date}} EST</h4>
-        <div class="receipt-shipping">
-
-            <div class="receipt-shipping-left">
-                <ul>
-                    <li>{{order.bank_name}}</li>
-                    <li>{{user_info.first_name}} {{user_info.last_name}}</li>
-                    <li>{{order.address}}</li>
-                    <li>{{order.city}} {{order.state}} {{order.zip}}</li>
-                </ul>
-                <p>
-                    {{user_info.email}}
-                </p>
-
-            </div>
-            <div class="receipt-shipping-right">
-                <ul>
-                    <li>Shipped via Standard shipping</li>
-                    <li>Payment method: ACH debit</li>
-                </ul>
-            </div>
-        </div>
-        <hr>
-        <div class="receipt-order-details">
-            <h4>Order #<span id="order_id">CC{{order.order_id}}</span></h4>
-            <table>
-                {% for product in products %}
-                <tr>
-                    <td><h6>{{product.product_name}} ({{product.bundle_qty * product.quantity}} Cards)</h6></td>
-                    <td>QTY: {{product.quantity}}</td>
-                    <td>{{"$%.2f"|format(product.unit_price * (product.quantity * product.bundle_qty))}}</td>
-                </tr>
-                {% endfor %}
-                <tr id="receipt-total-items" >
-                    <td colspan="3">
-                        Items Total: {{"$%.2f"|format(total)}}
-                    </td>
-
-                </tr>
-                <tr id="receipt-shipping" >
-                    <td colspan="3">
-                        Shipping: {{"$%.2f"|format(15)}}
-                    </td>
-                </tr>
-                <tr id="receipt-total-amt" >
-                    <td colspan="3">
-                        Total Amount: {{"$%.2f"|format(total + 15)}}
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <hr />
+    <h4>{{date}} EST</h4>
+    <div class="receipt-shipping">
+      <div class="receipt-shipping-left">
+        <ul>
+          <li>{{order.bank_name}}</li>
+          <li>{{user_info.first_name}} {{user_info.last_name}}</li>
+          <li>{{order.address}}</li>
+          <li>{{order.city}} {{order.state}} {{order.zip}}</li>
+        </ul>
+        <p>{{user_info.email}}</p>
+      </div>
+      <div class="receipt-shipping-right">
+        <ul>
+          <li>Shipped via Standard shipping</li>
+          <li>Payment method: ACH debit</li>
+        </ul>
+      </div>
     </div>
+    <hr />
+    <div class="receipt-order-details">
+      <h4>Order #<span id="order_id">CC{{order.order_id}}</span></h4>
+      <table>
+        {% for product in products %}
+        <tr>
+          <td>
+            <h6>
+              {{product.product_name}} ({{product.bundle_qty *
+              product.quantity}} Cards)
+            </h6>
+          </td>
+          <td>QTY: {{product.quantity}}</td>
+          <td>
+            {{"$%.2f"|format(product.unit_price * (product.quantity *
+            product.bundle_qty))}}
+          </td>
+        </tr>
+        {% endfor %}
+        <tr id="receipt-total-items">
+          <td colspan="3">Items Total: {{"$%.2f"|format(total)}}</td>
+        </tr>
+        <tr id="receipt-shipping">
+          <td colspan="3">Shipping: {{"$%.2f"|format(15)}}</td>
+        </tr>
+        <tr id="receipt-total-amt">
+          <td colspan="3">Total Amount: {{"$%.2f"|format(total + 15)}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script type="module">
-let id = document.getElementById("order_id").innerText
-document.getElementById('cmd').addEventListener('click', async () => {
-  const receipt = document.getElementById('receipt');
-  const { jsPDF } = window.jspdf;
+  let id = document.getElementById("order_id").innerText;
+  document.getElementById("cmd").addEventListener("click", async () => {
+    const receipt = document.getElementById("receipt");
+    const { jsPDF } = window.jspdf;
 
-  const canvas = await html2canvas(receipt, {
-    scale: 2,            // Higher = sharper output
-    useCORS: true,
-    backgroundColor: '#ffffff'
-  });
+    const canvas = await html2canvas(receipt, {
+      scale: 2, // Higher = sharper output
+      useCORS: true,
+      backgroundColor: "#ffffff",
+    });
 
-  const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL("image/png");
 
-  const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdf = new jsPDF("p", "mm", "a4");
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
 
-  let heightLeft = imgHeight;
-  let position = 0;
-
-  // First page
-  pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight;
-
-  // Additional pages if content overflows
-  while (heightLeft > 0) {
-    position -= pageHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    // First page
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
-  }
 
-  pdf.save(`CC-Receipt-${id}.pdf`);
-});
+    // Additional pages if content overflows
+    while (heightLeft > 0) {
+      position -= pageHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
 
+    pdf.save(`CC-Receipt-${id}.pdf`);
+  });
 </script>
-
 
 {% endblock %}

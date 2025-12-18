@@ -103,3 +103,20 @@ for bank in bank_data:
     db.execute("INSERT INTO banks (bank_name, website, city, zip, state, address) VALUES (?, ?, ?, ?, ?, ?)", bank["bank_name"], bank["website"], bank["city"], bank["zip"], bank["state"], bank["address"] )
 
 print("All done!")
+
+# OPTIONALLY: This SQL statement will insert all banks:
+
+# INSERT INTO banks (bank_name, website, city, state, zip, address)
+# VALUES
+#   ('Sunshine Bank', 'https://www.sunshinebank.com', 'San Francisco', 'CA', '94105', '123 Sunshine St, Suite 400'),
+#   ('Greenfield Trust', 'https://www.greenfieldtrust.com', 'Chicago', 'IL', '60611', '234 Greenfield Rd'),
+#   ('Pioneer Savings', 'https://www.pioneersavings.com', 'Dallas', 'TX', '75201', '500 Pioneer Ave'),
+#   ('Oak Valley Bank', 'https://www.oakvalleybank.com', 'New York', 'NY', '10001', '60 Oak St'),
+#   ('Golden Gate Bank', 'https://www.goldengatebank.com', 'Los Angeles', 'CA', '90001', '789 Golden Gate Blvd'),
+#   ('Clearwater Financial', 'https://www.clearwaterfinancial.com', 'Seattle', 'WA', '98101', '123 Clearwater St'),
+#   ('Riverside National', 'https://www.riversidenational.com', 'Denver', 'CO', '80202', '456 Riverside Dr'),
+#   ('Skyline Credit Union', 'https://www.skylinecu.com', 'Boston', 'MA', '02108', '101 Skyline Rd'),
+#   ('Lakeshore Financial Group', 'https://www.lakeshorefinancial.com', 'Minneapolis', 'MN', '55101', '678 Lakeshore Ave'),
+#   ('Summit Trust Bank', 'https://www.summittrustbank.com', 'Phoenix', 'AZ', '85001', '234 Summit St'),
+#   ('Maple Valley Credit Union', 'https://www.maplevalleycu.com', 'Portland', 'OR', '97201', '123 Maple Valley Rd');
+

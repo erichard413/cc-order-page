@@ -52,3 +52,62 @@ CREATE TABLE orders (
     shipped_date TEXT,
     tracking TEXT
 );
+
+-- If using postgres: 
+-- CREATE TABLE banks (
+--     bank_id SERIAL PRIMARY KEY,
+--     bank_name TEXT NOT NULL,
+--     website TEXT,
+--     city TEXT,
+--     state CHAR(2),
+--     zip TEXT NOT NULL,
+--     address TEXT
+-- );
+
+-- CREATE TABLE users (
+--     user_id SERIAL PRIMARY KEY,
+--     username TEXT NOT NULL,
+--     password TEXT NOT NULL,
+--     first_name TEXT NOT NULL,
+--     last_name TEXT NOT NULL,
+--     email TEXT NOT NULL,
+--     join_date TIMESTAMP NOT NULL,
+--     is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+--     is_cc_admin BOOLEAN NOT NULL DEFAULT FALSE,
+--     bank INTEGER REFERENCES banks(bank_id) ON DELETE SET NULL
+-- );
+
+-- CREATE TABLE products (
+--     product_id SERIAL PRIMARY KEY,
+--     product_name TEXT NOT NULL,
+--     product_type TEXT NOT NULL,
+--     unit_price NUMERIC(10,2) NOT NULL,
+--     bundle_qty INTEGER,
+--     description TEXT NOT NULL,
+--     img_src TEXT
+-- );
+
+-- CREATE TABLE orders (
+--     order_id SERIAL PRIMARY KEY,
+--     user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+--     order_date TIMESTAMP NOT NULL,
+--     order_status TEXT NOT NULL,
+--     bank_id INTEGER REFERENCES banks(bank_id) ON DELETE SET NULL,
+--     note VARCHAR(255),
+--     first_name TEXT NOT NULL,
+--     last_name TEXT NOT NULL,
+--     address TEXT NOT NULL,
+--     state CHAR(2) NOT NULL,
+--     city TEXT NOT NULL,
+--     zip TEXT NOT NULL,
+--     admin_note TEXT,
+--     shipped_date TIMESTAMP,
+--     tracking TEXT
+-- );
+
+-- CREATE TABLE order_items (
+--     order_item_id SERIAL PRIMARY KEY,
+--     quantity INTEGER NOT NULL DEFAULT 1,
+--     order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
+--     product_id INTEGER REFERENCES products(product_id)
+-- );

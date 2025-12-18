@@ -4,11 +4,9 @@ from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for, jsonify
 from flask_session import Session
 import math
-
-# 12/11/2025: TODOS:
-# format CSS for mobile
-
-from helpers import login_required, is_valid_email_regex, cc_admin_required, doLogin, isValidBank, isValidUsername, isValidPassword, doRegister, updateUserInfo, getUserInfo, updatePassword, createNewOrder, getReceiptData, getCartData, getProduct, getOrderCount, getOrderHistory, getFilteredOrders, getOrderById, editOrder, getUsersCount, getUsers, getBanks, getBanksCount, getBankById, editBank, deleteBank, getAllBanks, state_abbr, createBank, adminUpdateUser, adminChangePassword, adminCreateUser, deleteUser
+from helpers import login_required, getProducts, getFirstName, is_valid_email_regex, cc_admin_required, doLogin, isValidBank, isValidUsername, isValidPassword, doRegister, updateUserInfo, getUserInfo, updatePassword, createNewOrder, getReceiptData, getCartData, getProduct, getOrderCount, getOrderHistory, getFilteredOrders, getOrderById, editOrder, getUsersCount, getUsers, getBanks, getBanksCount, getBankById, editBank, deleteBank, getAllBanks, state_abbr, createBank, adminUpdateUser, adminChangePassword, adminCreateUser, deleteUser
+from flask_sqlalchemy import SQLAlchemy
+from database import db
 
 # Configure application
 app = Flask(__name__, static_folder='./static')
@@ -17,8 +15,14 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///ccdata.db")
+# db = SQL("sqlite:///ccdata.db")
+
+db.init_app(app)
 
 @app.after_request
 def after_request(response):
@@ -32,12 +36,11 @@ def after_request(response):
 def index():
     user = session.get('user_id')
     if (user):
-        try:
-            rows = db.execute("SELECT first_name FROM users WHERE user_id=?", session["user_id"])
-            return render_template("index.html", name= rows[0]["first_name"] if rows else None)
-        except:
-            flash("Could not load user!")
-            return redirect("/")
+        first_name = getFirstName(user)
+        if first_name[0] == False:
+            flash(first_name[1])
+            return render_template("index.html")
+        return render_template("index.html", name=first_name[2])
     return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -163,9 +166,11 @@ def mypassword():
 @app.route("/order", methods=["GET", "POST"])
 @login_required
 def order():
-    if (session["user_id"] == True):
+    rows=getProducts()
+    if rows[0] == False:
+        flash(rows[1])
         return redirect("/")
-    products=db.execute("SELECT * FROM products")
+    products = [dict(row) for row in rows[2]]
     if request.method == "POST":
         data = request.json
         if 'id' not in data or 'qty' not in data:
@@ -179,7 +184,7 @@ def order():
             session['cart'][id] = {'id': id, 'qty': qty}
         found_product = [p for p in products if p.get('product_id') == id][0]
         flash(f"Added {qty} bundle{'s' if qty != 1 else ''} of {found_product['bundle_qty']} of {found_product['product_name']}s to cart!")
-        return redirect("/order", products=products)
+        return jsonify(success=True)
     return render_template("/order.html", products=products)
 
 @app.route("/order/new", methods=["POST"])
@@ -206,7 +211,7 @@ def order_receipt(order_id):
     if receipt_data[0] == False:
         flash(receipt_data[1])
         return redirect("/")
-    return render_template("/receipt.html", order=order, user_info=receipt_data[2][0], date=receipt_data[2][1], products=receipt_data[2][2], total=receipt_data[2][3], is_admin=session['is_cc_admin'])
+    return render_template("/receipt.html", order=receipt_data[2][4], user_info=receipt_data[2][0], date=receipt_data[2][1], products=receipt_data[2][2], total=receipt_data[2][3], is_admin=session['is_cc_admin'])
 
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
@@ -230,7 +235,7 @@ def deleteFromCart(product_id):
 
     if request.method == "DELETE":
         del session['cart'][product_id]
-        flash(f"Removed {product_info[2]['product_name']}s from cart!")
+        flash(f"Removed {product[2]['product_name']}s from cart!")
         return redirect("/cart")
 
 @app.route("/error", methods=["DELETE"])
@@ -289,7 +294,6 @@ def orders():
     if orders_query[0]==False:
         flash(orders_query[1])
         return redirect("/")
-    print(len(orders_query[2]))
     return render_template("orders.html", orders=orders_query[2], page=int(page), endpage=endpage)
 
 
@@ -297,10 +301,12 @@ def orders():
 @cc_admin_required
 def edit_orders(id):
     order_query = getOrderById(id)
+    order = dict(order_query[2])
+    formatted_date = str(order['shipped_date']).split(" ")[0]
+    order['shipped_date'] = formatted_date
     if order_query[0] ==  False:
         flash(order_query[1])
         return redirect("/orders")
-    order = order_query[2]
     statuses = ["received", "processing", "delayed", "shipped"]
     if request.method == "POST":
         response = editOrder(id, request.form, statuses)
@@ -324,7 +330,6 @@ def get_orders():
     if count_query[2] > 0:
         page = request.args.get('page', '1',)
         endpage = math.ceil(int(count_query[2])/limit)
-
         if page.isdigit() == False:
             return redirect("/users?page=1")
         if int(page) > endpage:
