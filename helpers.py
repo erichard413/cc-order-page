@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
+import sys
 # if using older version of python, import backports.zoneinfo:
-# from backports.zoneinfo import ZoneInfo
-from zoneinfo import ZoneInfo
+if sys.version_info.major <= 3 and sys.version_info.minor <= 8:
+    from backports.zoneinfo import ZoneInfo
+else:
+    from zoneinfo import ZoneInfo
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import redirect, session
 from functools import wraps
@@ -544,7 +547,7 @@ def getCartData():
         # Match products in cart
         for product_id, cart_item in session.get('cart', {}).items():
             for p in products:
-                if p['product_id'] == product_id:
+                if p['product_id'] == int(product_id):
                     p_copy = dict(p)
                     p_copy['qty'] = cart_item.get('qty', 0)
                     product_list.append(p_copy)

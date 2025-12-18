@@ -74,41 +74,41 @@
                                 <label for="first_name">
                                     First Name:
                                 </label>
-                                <input autocomplete="off" autofocus class="form-control" name="first_name" value="{{user_info.first_name}}" type="text">
+                                <input autocomplete="off" id="first_name" autofocus class="form-control" name="first_name" value="{{user_info.first_name}}" type="text">
                             </div>
                             <div class="mb-3">
                                 <label for="last_name">
                                     Last Name:
                                 </label>
-                                <input autocomplete="off" autofocus class="form-control" name="last_name" value="{{user_info.last_name}}" type="text">
+                                <input autocomplete="off" id="last_name" autofocus class="form-control" name="last_name" value="{{user_info.last_name}}" type="text">
                             </div>
                             <div class="mb-3">
                                 <label for="address">
                                     Address:
                                 </label>
-                                <input autocomplete="off" autofocus class="form-control" name="address" value="{{user_info.address}}" type="text">
+                                <input autocomplete="off" id="address" autofocus class="form-control" name="address" value="{{user_info.address}}" type="text">
                             </div>
                             <div class="mb-3">
                                 <label for="city">
                                     City:
                                 </label>
-                                <input autocomplete="off" autofocus class="form-control" name="city" value="{{user_info.city}}" type="text">
+                                <input autocomplete="off" id="city" autofocus class="form-control" name="city" value="{{user_info.city}}" type="text">
                             </div>
                             <div class="mb-3">
-                                <label for="Address">
+                                <label for="state">
                                     State:
                                 </label>
-                                <select autocomplete="off" autofocus class="form-control" name="state" value="{{user_info.state}}" type="select">
+                                <select autocomplete="off" id="state" autofocus class="form-control" name="state" value="{{user_info.state}}" type="select">
                                     {% for state in states %}
                                     <option>{{state}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="Address">
+                                <label for="zip">
                                     Zip:
                                 </label>
-                                <input autocomplete="off" autofocus class="form-control" name="zip" value="{{user_info.zip}}" type="text">
+                                <input autocomplete="off" id="zip" autofocus class="form-control" name="zip" value="{{user_info.zip}}" type="text">
                             </div>
                         </form>
             </div>
@@ -120,7 +120,7 @@
                 <div class="note-edit-div hidden">
                 <form id="notes-form">
                     <div class="mb-3">
-                                <label for="note">
+                                <label for="note-text-area">
                                     Leave a note:
                                 </label>
                                 <textarea id="note-text-area" autocomplete="off" autofocus class="form-control" name="note" type="textarea" value=""></textarea>
@@ -209,13 +209,13 @@ async function sendDeleteRequest(url) {
         headers: {
             'Content-Type': 'application/json' // Indicate that the body contains JSON data
         },
-    }).then(() => {
-        window.location = "/cart"; // triggers page load → flash message appears
-    });
+    })
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    window.location.href = "/cart"; // triggers page load → flash message appears
 
     } catch (error) {
         console.error('Error during DELETE request:', error);

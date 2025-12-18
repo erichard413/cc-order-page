@@ -166,16 +166,30 @@ def order():
     products = [dict(row) for row in rows[2]]
     if request.method == "POST":
         data = request.json
+        raw_id = data.get('id')
+        product_id = int(raw_id)
+        session_id = str(raw_id)
         if 'id' not in data or 'qty' not in data:
             flash("Invalid request!")
             return redirect("/order", products=products)
-        id = int(data.get('id'))
+        id = str(data.get('id'))
         qty = int(data.get('qty'))
-        if id in session['cart']:
-            session['cart'][id]['qty'] = session['cart'][id]['qty'] + qty
+        if 'cart' not in session:
+            session['cart'] = {}
+
+        if session_id in session['cart']:
+            session['cart'][session_id]['qty'] += qty
         else:
-            session['cart'][id] = {'id': id, 'qty': qty}
-        found_product = [p for p in products if p.get('product_id') == id][0]
+            session['cart'][session_id] = {
+                'id': product_id,
+                'qty': qty
+            }
+
+        found_product = next((p for p in products if p.get('product_id') == product_id), None)
+
+        if not found_product:
+            flash("Product not found.")
+            return jsonify(success=False), 400
         flash(f"Added {qty} bundle{'s' if qty != 1 else ''} of {found_product['bundle_qty']} of {found_product['product_name']}s to cart!")
         return jsonify(success=True)
     return render_template("/order.html", products=products)
@@ -206,7 +220,7 @@ def order_receipt(order_id):
         return redirect("/")
     return render_template("/receipt.html", order=receipt_data[2][4], user_info=receipt_data[2][0], date=receipt_data[2][1], products=receipt_data[2][2], total=receipt_data[2][3], is_admin=session['is_cc_admin'])
 
-@app.route("/cart", methods=["GET", "POST"])
+@app.route("/cart", methods=["GET"])
 @login_required
 def cart():
     data = getCartData()
@@ -215,21 +229,23 @@ def cart():
         return redirect("/")
     return render_template("/cart.html", cart=session['cart'], user_info=data[2][0], products=data[2][1], total=data[2][2], states=data[2][3])
 
-@app.route("/cart/<int:product_id>", methods=["DELETE", "POST"])
+@app.route("/cart/<int:product_id>", methods=["DELETE"])
 @login_required
 def deleteFromCart(product_id):
     """
     this route will remove items from CART
     """
     product = getProduct(product_id)
+
     if product[0] == False:
         flash(product[1])
-        return redirect("/cart")
+        return jsonify(error=product[1]), 400
 
     if request.method == "DELETE":
-        del session['cart'][product_id]
         flash(f"Removed {product[2]['product_name']}s from cart!")
-        return redirect("/cart")
+        session['cart'].pop(str(product_id), None)
+        session.modified = True
+        return jsonify(success=True)
 
 @app.route("/error", methods=["DELETE"])
 def error(e):
