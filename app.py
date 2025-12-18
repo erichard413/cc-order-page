@@ -8,11 +8,6 @@ from database import db
 
 # Configure application
 app = Flask(__name__, static_folder='./static')
-# Configure session to use filesystem (instead of signed cookies)
-# app.config["SESSION_TYPE"] = "filesystem"
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "redis"
-app.config["SESSION_REDIS"] = Redis.from_url(os.environ["REDIS_URL"])
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
