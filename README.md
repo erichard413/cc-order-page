@@ -1,6 +1,6 @@
 # CC Order Page
 
-#### Video Demo: <URL HERE>
+#### Video Demo: [https://youtu.be/D2gC3sgP8rA]
 
 #### Description: An intuitive Card Ordering Website application that allows clients to register an account, log in/out and place inventory orders.
 
@@ -10,13 +10,9 @@
 - [Deployment](#deployment)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
+- [Prerequisites](#prerequisites)
 - [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## About
 
@@ -42,8 +38,6 @@ It’s deployed on Vercel (https://cc-order-page.vercel.app/) and uses a Neon Po
 - Languages used: Python, Jinja, Javascript, SQL
 - Hosting: Vercel & Neon
 - Styling: HTML + CSS
-
-## Getting Started
 
 ### Prerequisites
 
