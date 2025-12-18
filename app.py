@@ -463,6 +463,11 @@ def delete_user(id):
     flash(res[1])
     return redirect("/users")
 
+@app.errorhandler(404)
+def page_not_found(error):
+    flash("Page not found! 404.")
+    return redirect("/")
+
 # Run the app if this file is executed directly
 if __name__ == "__main__":
     app.run()
