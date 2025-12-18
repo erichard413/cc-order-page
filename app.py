@@ -1,9 +1,7 @@
 import os
-from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for, jsonify
 import math
 from helpers import login_required, getProducts, getFirstName, is_valid_email_regex, cc_admin_required, doLogin, isValidBank, isValidUsername, isValidPassword, doRegister, updateUserInfo, getUserInfo, updatePassword, createNewOrder, getReceiptData, getCartData, getProduct, getOrderCount, getOrderHistory, getFilteredOrders, getOrderById, editOrder, getUsersCount, getUsers, getBanks, getBanksCount, getBankById, editBank, deleteBank, getAllBanks, state_abbr, createBank, adminUpdateUser, adminChangePassword, adminCreateUser, deleteUser
-from flask_sqlalchemy import SQLAlchemy
 from database import db
 
 # Configure application

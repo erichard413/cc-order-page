@@ -1,4 +1,3 @@
-from cs50 import SQL
 from datetime import datetime, timezone
 # if using older version of python, import backports.zoneinfo:
 # from backports.zoneinfo import ZoneInfo
