@@ -3,7 +3,6 @@ cachelib==0.13.0
 click==8.1.8
 cs50==9.4.0
 flask==3.0.3
-flask-session==0.8.0
 greenlet==3.1.1
 importlib-metadata==8.5.0
 itsdangerous==2.2.0
@@ -20,4 +19,3 @@ zipp==3.20.2
 gunicorn
 psycopg
 flask_sqlalchemy
-redis

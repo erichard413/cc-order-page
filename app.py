@@ -2,7 +2,6 @@ import os
 from redis import Redis
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for, jsonify
-from flask_session import Session
 import math
 from helpers import login_required, getProducts, getFirstName, is_valid_email_regex, cc_admin_required, doLogin, isValidBank, isValidUsername, isValidPassword, doRegister, updateUserInfo, getUserInfo, updatePassword, createNewOrder, getReceiptData, getCartData, getProduct, getOrderCount, getOrderHistory, getFilteredOrders, getOrderById, editOrder, getUsersCount, getUsers, getBanks, getBanksCount, getBankById, editBank, deleteBank, getAllBanks, state_abbr, createBank, adminUpdateUser, adminChangePassword, adminCreateUser, deleteUser
 from flask_sqlalchemy import SQLAlchemy
@@ -15,11 +14,11 @@ app = Flask(__name__, static_folder='./static')
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "redis"
 app.config["SESSION_REDIS"] = Redis.from_url(os.environ["REDIS_URL"])
-Session(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+app.secret_key = os.environ["SECRET_KEY"]
 
 # Configure CS50 Library to use SQLite database
 # db = SQL("sqlite:///ccdata.db")
