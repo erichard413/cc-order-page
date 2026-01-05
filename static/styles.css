@@ -505,6 +505,7 @@ table .right-align {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 50px;
 }
 .fa-circle-arrow-left,
 .fa-circle-arrow-right {
@@ -975,7 +976,8 @@ table .right-align {
       .password,
       .banks,
       .newbank,
-      .editorder
+      .editorder,
+      .editbank
     )
     :is(input, button, select, .a-btn, textarea) {
     width: 60vw !important;
@@ -995,7 +997,8 @@ table .right-align {
       .password,
       .banks,
       .newbank,
-      .editorder
+      .editorder,
+      .editbank
     )
     label {
     display: block !important;
@@ -1026,11 +1029,23 @@ table .right-align {
     align-items: center;
     gap: 12px;
   }
+  .editbank #buttons-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
   .newbank #buttons-div button {
     order: 1; /* Submit */
   }
-
+  .editbank #buttons-div button {
+    order: 1; /* Submit */
+  }
   .newbank #buttons-div .a-btn {
+    order: 2; /* Cancel */
+    margin-left: 0;
+  }
+  .editbank #buttons-div .a-btn {
     order: 2; /* Cancel */
     margin-left: 0;
   }
@@ -1113,5 +1128,8 @@ table .right-align {
 
   .right-align {
     text-align: right;
+  }
+  .edituser #delete-btn {
+    margin-bottom: 70px !important;
   }
 }

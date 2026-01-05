@@ -4,16 +4,20 @@ import math
 from helpers import login_required, getProducts, getFirstName, is_valid_email_regex, cc_admin_required, doLogin, isValidBank, isValidUsername, isValidPassword, doRegister, updateUserInfo, getUserInfo, updatePassword, createNewOrder, getReceiptData, getCartData, getProduct, getOrderCount, getOrderHistory, getFilteredOrders, getOrderById, editOrder, getUsersCount, getUsers, getBanks, getBanksCount, getBankById, editBank, deleteBank, getAllBanks, state_abbr, createBank, adminUpdateUser, adminChangePassword, adminCreateUser, deleteUser
 from database import db
 
+flask_env = os.environ.get('FLASK_ENV', 'development')
+
 # Configure application
 app = Flask(__name__, static_folder='./static')
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+local_db = (
+    "sqlite:///" + os.path.join(basedir, "ccdata.db")
+)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', local_db)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
 app.secret_key = os.environ["SECRET_KEY"]
-
-# Configure CS50 Library to use SQLite database
-# db = SQL("sqlite:///ccdata.db")
 
 db.init_app(app)
 
